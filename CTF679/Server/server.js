@@ -43,4 +43,5 @@ const server = ws.createServer(connect => {
 });
 server.listen(POST, () => {
     console.log('webSocket服务启动成功了，监听了端口' + POST);
+    console.log('干翻Bilibili');
 });
