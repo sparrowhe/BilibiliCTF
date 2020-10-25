@@ -1,9 +1,14 @@
+# -*- coding: utf-8 -*-
 import http.client
 import uuid
 import random
+import json
+import time
+import ssl
+import websocket
 
 
-def fuck(flag):
+def fuck(flag, ws):
     conn = http.client.HTTPSConnection("security.bilibili.com")
     payload = "{\"flag\":\"" + flag + "\",\"ctf_id\":6}"
     headers = {
@@ -25,9 +30,12 @@ def fuck(flag):
     conn.request("POST", "/sec1024/api/v1/flag", payload, headers)
     res = conn.getresponse()
     data = res.read()
-    print(data.decode("utf-8") + " " + payload)
     if data.decode("utf-8").find("Flag错误，请继续努力") == -1:
+        print(data.decode("utf-8") + " " + payload)
+        ws.send(data.decode("utf-8") + " " + payload)
         exit()
+    else:
+        print(data.decode("utf-8") + " " + payload)
 
 
 def get_flag():
@@ -40,5 +48,39 @@ def get_flag():
     return '-'.join(temp)
 
 
-while True:
-    fuck(get_flag())
+def on_message(self, message):  # 第一个参数必须传递
+    print(message)
+
+
+def on_error(self, error):
+    print(error)
+
+
+def on_close(self):
+    print("### closed ###")
+
+
+def on_open(self):
+    def run():
+        for i in range(3):  # 可以死循环发送
+            ws.send("1")
+
+    thread.start_new_thread(run, ())  # 启动线程执行run()函数发送数据
+
+
+###############################################################
+url = 'ws://127.0.0.1:8080'
+ws = None
+while True:  # 一直链接，直到连接上就退出循环
+    time.sleep(2)
+    try:
+        ws = websocket.WebSocket(sslopt={"cert_reqs": ssl.CERT_NONE})
+        ws.connect(url)
+        print(ws)
+        break
+    except Exception as e:
+        print('连接异常：', e)
+        continue
+while True:  # 连接上，退出第一个循环之后，此循环用于一直获取数据
+    ws.send("1")
+    print(fuck(ws.recv(), ws))
