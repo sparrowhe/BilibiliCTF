@@ -1,16 +1,4 @@
-function uuid() {
-    var s = [];
-    var hexDigits = "0123456789abcdef";
-    for (var i = 0; i < 36; i++) {
-        s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
-    }
-    s[14] = "4"; // bits 12-15 of the time_hi_and_version field to 0010  
-    s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1); // bits 6-7 of the clock_seq_hi_and_reserved to 01  
-    s[8] = s[17] = s[26] = s[36] = "-";
-
-    var uuid = s.join("");
-    return uuid;
-}
+function uuid(a) { return a ? (a ^ Math.random() * 16 >> a / 4).toString(16) : ([1e7] + -1e7 + -1e7 + -1e7).replace(/[018]/g, uuid) }
 
 const ws = require('nodejs-websocket'); //引入依赖包
 const POST = 8080; //定义端口
