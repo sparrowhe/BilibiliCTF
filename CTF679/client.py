@@ -8,9 +8,9 @@ import ssl
 import websocket
 
 
-def fuck(flag, ws):
+def fuck(flag, ws,ctf_is):
     conn = http.client.HTTPSConnection("security.bilibili.com")
-    payload = "{\"flag\":\"" + flag + "\",\"ctf_id\":6}"
+    payload = "{\"flag\":\"" + flag + "\",\"ctf_id\":" + ctf_is + "}"
     headers = {
         'Host': ' security.bilibili.com',
         'Connection': ' keep-alive',
@@ -32,7 +32,7 @@ def fuck(flag, ws):
     data = res.read()
     if data.decode("utf-8").find("Flag错误，请继续努力") == -1:
         print(data.decode("utf-8") + " " + payload)
-        ws.send(data.decode("utf-8") + " " + payload)
+        ws.send(data.decode("utf-8") + " 这是破解成功了？" + payload)
         exit()
     else:
         print(data.decode("utf-8") + " " + payload)
@@ -69,7 +69,7 @@ def on_open(self):
 
 
 ###############################################################
-url = 'ws://127.0.0.1:8080'
+url = 'ws://127.0.0.1:17001'
 ws = None
 while True:  # 一直链接，直到连接上就退出循环
     time.sleep(2)
@@ -83,4 +83,6 @@ while True:  # 一直链接，直到连接上就退出循环
         continue
 while True:  # 连接上，退出第一个循环之后，此循环用于一直获取数据
     ws.send("1")
-    print(fuck(ws.recv(), ws))
+    print(fuck(ws.recv(), ws,"6"))
+    print(fuck(ws.recv(), ws,"7"))
+    print(fuck(ws.recv(), ws,"9"))

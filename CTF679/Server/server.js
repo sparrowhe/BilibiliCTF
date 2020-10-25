@@ -1,7 +1,7 @@
 function uuid(a) { return a ? (a ^ Math.random() * 16 >> a / 4).toString(16) : ([1e7] + -1e7 + -1e7 + -1e7).replace(/[018]/g, uuid) }
 
 const ws = require('nodejs-websocket'); //引入依赖包
-const POST = 8080; //定义端口
+const POST = 17001; //定义端口
 // 创建一个server
 const server = ws.createServer(connect => {
     //每次只要有新的用户加入，就会为当前用户创建一个connect对象，同时调用一下这个回调函数。
@@ -11,9 +11,12 @@ const server = ws.createServer(connect => {
     connect.on("text", data => {
         // 每当接受到用户请求事件，这个回调函数就会被触发。
         console.log("Received " + data);
-        // sendText/send 方法：接受到请求后，响应一个数据给用户。因为是connect调用，所以只给当前connet对应的用户发送，如果需要给所有用户发送（广播），需要connections这个数组
-        //connect.sendText(data.toUpperCase() + "!!!"); //如果直接返回一个data，就会像echo那个服务器一样的功能，接收到什么就返回什么
-        connect.sendText(uuid())
+        var tempUuid = uuid()
+        tempUuid = tempUuid.substring(0, 35)
+            // sendText/send 方法：接受到请求后，响应一个数据给用户。因为是connect调用，所以只给当前connet对应的用户发送，如果需要给所有用户发送（广播），需要connections这个数组
+            //connect.sendText(data.toUpperCase() + "!!!"); //如果直接返回一个data，就会像echo那个服务器一样的功能，接收到什么就返回什么
+        connect.sendText(tempUuid)
+        console.log("这是生成的UUID " + tempUuid);
     });
 
     // 连接断开 触发close事件
