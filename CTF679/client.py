@@ -85,6 +85,8 @@ while True:  # 一直链接，直到连接上就退出循环
         continue
 while True:  # 连接上，退出第一个循环之后，此循环用于一直获取数据
     ws.send("1")
-    print(fuck(ws.recv(), ws,"6"))
-    print(fuck(ws.recv(), ws,"7"))
-    print(fuck(ws.recv(), ws,"9"))
+    print(fuck(ws.recv(), ws, "6"))
+    ws.send("1")
+    print(fuck(ws.recv(), ws, "7"))
+    ws.send("1")
+    print(fuck(ws.recv(), ws, "9"))
